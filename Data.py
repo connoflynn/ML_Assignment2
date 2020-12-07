@@ -12,15 +12,15 @@ def remove_beerid(data):
     return data.drop(columns = "beer_id")
     
 # function to split data into training and test data    
-def split_data(data):
+def split_data(data, ratio):
     #shuffle data
     shuffled_data = data.sample(frac=1)
-    split_ratio = 0.666  #TODO add option to choose split ratio
+    split_ratio = ratio  
 
-    #add first 0.666 of data to training variable
+    #add first portion of data to training variable
     training = shuffled_data[0:int(np.ceil(len(data)*split_ratio))]
 
-    # add everything after first 0.666 to testing variable
+    # add everything after first portion to testing variable
     testing = shuffled_data[int(np.ceil(len(data)*split_ratio))+1:len(data)]
 
     return training, testing

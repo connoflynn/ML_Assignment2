@@ -21,3 +21,6 @@ class Tree:
         if self.right:
             out += "\n\t Right: %s" % self.right
         return out
+
+def create_tree():
+    return tree
