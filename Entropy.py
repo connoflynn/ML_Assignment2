@@ -7,7 +7,7 @@ def get_entropy(data, target):
 
     results = get_class_count(data, target)
     log2 = lambda x: math.log(x) / math.log(2)
-    print(results)
+    
 	#formula calculation
     entropy = 0.0
     for result in results.keys():
