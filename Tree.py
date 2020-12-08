@@ -26,9 +26,9 @@ class Tree:
 
 # recursive function to build the tree
 def create_tree(data, attributes, target):
-    training = data[attributes]
-    training[target] = data[target]
-    print(attributes)
+    training = data.loc[:, attributes] # set the dataset to only include the attributes given
+    training[target] = data.loc[:, target] # add target column to dataset
+    
     target_column = training.loc[:, target] # get target column in the training data
     target_val = target_column.iloc[0] 
     if all(value == target_val for value in target_column):
@@ -50,20 +50,14 @@ def create_tree(data, attributes, target):
 
     split_attribute_value = training[split_attribute[0]][split_attribute[1]]
     
-
-
-    # print("+++++++++++")
-    # print(attributes)
-    # print(split_attribute)
     attributes.remove(split_attribute[0])
-    # print(attributes)
-    # print("+++++++++")
     
     #split the data for left and right branches
     split_left = training[training[split_attribute[0]] < split_attribute_value]
     split_right = training[training[split_attribute[0]] >= split_attribute_value]
-    del split_left[split_attribute[0]]
-    del split_right[split_attribute[0]]
+
+    split_left.drop(columns = split_attribute[0])
+    split_right.drop(columns = split_attribute[0])
     # print("-----------------")
     # print(split_left)
     # print("11111111111111111")

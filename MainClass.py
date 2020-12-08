@@ -11,7 +11,7 @@ def main():
 
     target_feature_value = "style"
     attributes = data.columns.values.tolist()
-    attributes.remove(target_feature_value)
+    
     tree = create_tree(data, attributes, target_feature_value)
     print(tree)
 main()
