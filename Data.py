@@ -36,3 +36,12 @@ def get_class_count(data, target):
         results[target_result] += 1
 
     return results
+
+# function to split the data set based on an atributes split value
+# used to split tree nodes
+def split_for_branches(data, attribute, attribute_split_value, attribute_split_index):
+    #splits data into less than and greater than or equal of value at index given
+    left_split = data[data[attribute] < attribute_split_value]
+    right_split = data[data[attribute] >= attribute_split_value]
+
+    return left_split, right_split

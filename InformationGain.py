@@ -3,11 +3,11 @@ from Entropy import get_entropy
 
 # class to calculte information gain of the training data
 
-def get_information_gain(data, target, attribute, attribute_index):
+def get_information_gain(data, target, attribute, attribute_split_index):
     # Information Gain formula:
     # Ent(S) - sum(|Sv|/|S| * Ent(Sv))
     data_length = len(data)
-    split_value = data[attribute][attribute_index]
+    split_value = data[attribute][attribute_split_index]
 
     #splits data into less than and greater than or equal of value at index given
     left_split = data[data[attribute] < split_value]
@@ -48,6 +48,8 @@ def find_split_indexes(data, target):
 def choose_best_attribute(data, target, split_values, split_indexes):
     best_info_gain = ()
     info_gain = 0.0
+    #iterate the attributes and find the info gain for each attribute
+    #the attribute with the highest info gain is added to the tuple
     for (attribute, index) in split_indexes.items():
         info = get_information_gain(data, target, attribute, index)
         if info > info_gain :

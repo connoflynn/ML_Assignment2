@@ -5,6 +5,8 @@
 # 5 Recurse on the sublists obtained by splitting on a_best, and add those nodes as children of node.
 
 import Tree as tree
+from InformationGain import find_split_indexes, choose_best_attribute
+from Data import split_for_branches, get_class_count
 
 # class to make the decision tree
 
@@ -22,5 +24,50 @@ class Tree:
             out += "\n\t Right: %s" % self.right
         return out
 
-def create_tree():
-    return tree
+# recursive function to build the tree
+def create_tree(data, attributes, target):
+    training = data[attributes]
+    training[target] = data[target]
+    print(attributes)
+    target_column = training.loc[:, target] # get target column in the training data
+    target_val = target_column.iloc[0] 
+    if all(value == target_val for value in target_column):
+        return tree.Tree(target_val) # if all the target values are one type, creates a leaf node
+
+    if len(attributes) == 1: # if we run out of attributes to split by, we take the majority target value in the remaining data
+        num_classes = get_class_count(training, target)
+        most_class = 0
+        majority_class = ""
+        for target_value in num_classes:
+            if num_classes[target_value] > most_class:
+               most_class = num_classes[target_value]
+               majority_class = target_value
+        return tree.Tree(majority_class)
+
+
+    split_values, split_indexes = find_split_indexes(training, target)
+    split_attribute = choose_best_attribute(training, target, split_values, split_indexes)
+
+    split_attribute_value = training[split_attribute[0]][split_attribute[1]]
+    
+
+
+    # print("+++++++++++")
+    # print(attributes)
+    # print(split_attribute)
+    attributes.remove(split_attribute[0])
+    # print(attributes)
+    # print("+++++++++")
+    
+    #split the data for left and right branches
+    split_left = training[training[split_attribute[0]] < split_attribute_value]
+    split_right = training[training[split_attribute[0]] >= split_attribute_value]
+    del split_left[split_attribute[0]]
+    del split_right[split_attribute[0]]
+    # print("-----------------")
+    # print(split_left)
+    # print("11111111111111111")
+    # print(split_right)
+    # print("-----------------")
+    return tree.Tree({split_attribute[0]: split_attribute_value}, create_tree(split_left, attributes, target),
+                     create_tree(split_right, attributes, target))
