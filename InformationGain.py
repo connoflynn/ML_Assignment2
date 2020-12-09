@@ -58,3 +58,27 @@ def choose_best_attribute(data, target, split_values, split_indexes):
     
     # will return a tuple containing the name of the attribute and the info gain value
     return best_info_gain
+
+
+#function to predit what target value a given test row of data will be
+def predict_attributes(test_data_row, tree):
+    root_node = tree.root
+    
+    if isinstance(root_node,dict):
+        for attribute in root_node:
+            if test_data_row[attribute] < root_node[attribute]:
+                if tree.left is None:
+                    if tree.right is None:
+                        return root_node
+                    else:
+                        return tree.right
+                return predict_attributes(test_data_row, tree.left)
+            else:
+                if tree.right is None:
+                    if tree.left is None:
+                        return root_node
+                    else:
+                        return tree.left_split
+                return predict_attributes(test_data_row, tree.right)
+    else:
+        return root_node

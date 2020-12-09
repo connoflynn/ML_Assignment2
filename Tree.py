@@ -19,9 +19,9 @@ class Tree:
     def __str__(self):
         out = "Root: %s" % self.root
         if self.left:
-            out += "\n Left: %s" % self.left
+            out += "\n %s's Left: %s" % (self.root, self.left)
         if self.right:
-            out += "\n\t Right: %s" % self.right
+            out += "\n\t%s's Right: %s" % (self.root, self.right)
         return out
 
 # recursive function to build the tree
@@ -49,19 +49,20 @@ def create_tree(data, attributes, target):
     split_attribute = choose_best_attribute(training, target, split_values, split_indexes)
 
     split_attribute_value = training[split_attribute[0]][split_attribute[1]]
-    
+
+    #remove the used attribute from the attribute list
     attributes.remove(split_attribute[0])
     
     #split the data for left and right branches
     split_left = training[training[split_attribute[0]] < split_attribute_value]
     split_right = training[training[split_attribute[0]] >= split_attribute_value]
 
+    #drop the used columns from the branches
     split_left.drop(columns = split_attribute[0])
     split_right.drop(columns = split_attribute[0])
-    # print("-----------------")
-    # print(split_left)
-    # print("11111111111111111")
-    # print(split_right)
-    # print("-----------------")
-    return tree.Tree({split_attribute[0]: split_attribute_value}, create_tree(split_left, attributes, target),
-                     create_tree(split_right, attributes, target))
+
+    left_branch = create_tree(split_left, attributes, target)
+    right_branch = create_tree(split_right, attributes, target)
+
+    #return a tree with the split attribute as the root and the resulting tree from the rucursive calls as the branches
+    return tree.Tree({split_attribute[0]: split_attribute_value}, left_branch, right_branch)
